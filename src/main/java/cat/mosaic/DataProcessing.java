@@ -25,9 +25,9 @@ import static cat.mosaic.utils.ImageFileLister.partitionFiles;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+public class DataProcessing {
 
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
+    private static final Logger logger = Logger.getLogger(DataProcessing.class.getName());
 
 
     static final int numberTilesWidth = 10;
