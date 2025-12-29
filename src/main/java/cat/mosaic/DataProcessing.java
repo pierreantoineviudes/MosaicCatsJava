@@ -31,8 +31,8 @@ public class DataProcessing {
 
     static final int numberTilesWidth = 80;
     static final int numberTilesHeight = 100;
-    static final int finalImageWidth = numberTilesWidth * TileSize;
-    static final int finalImageHeight = numberTilesHeight * TileSize;
+    public static final int finalImageWidth = numberTilesWidth * TileSize;
+    public static final int finalImageHeight = numberTilesHeight * TileSize;
     static Map<Integer, RGB> globalHash = new ConcurrentHashMap<>();
 
     static AtomicInteger imageCounter = new AtomicInteger(0);
