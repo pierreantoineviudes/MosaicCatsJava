@@ -11,7 +11,7 @@ public class ImageFileLister {
 
     public static int nFiles = 0;
     public static List<File> imageFiles = new ArrayList<>();
-    private static Logger logger = Logger.getLogger(ImageFileLister.class.getName());
+    private static final Logger logger = Logger.getLogger(ImageFileLister.class.getName());
 
 
     public static void listImage(String directoryPath) {

@@ -47,7 +47,7 @@ public class DataProcessing {
         ExecutorService producerPool = Executors.newFixedThreadPool(N_THREAD_PRODUCER);
         ExecutorService readerPool = Executors.newFixedThreadPool(N_THREAD_CONSUMER);
 //        init imageFiles please
-        ImageFileLister.listImage(InOutConstants.catInputPath);
+        ImageFileLister.listImage(String.valueOf(InOutConstants.CAT_INPUT_PATH));
         List<List<File>> partitions = partitionFiles(ImageFileLister.imageFiles, N_THREAD_PRODUCER);
 
         for (List<File> part : partitions) {
@@ -88,8 +88,8 @@ public class DataProcessing {
         );
 
         logger.info("saving image");
-        ImageUtils.writeImageJPG(finalImage, mosaicTilesOutputPath);
+        ImageUtils.writeImageJPG(finalImage, String.valueOf(InOutConstants.MOSAIC_TILES_PATH));
         logger.info("after save");
-        HashMapIO.save(globalHash, hashOutputPath);
+        HashMapIO.save(globalHash, String.valueOf(InOutConstants.HASH_OUTPUT_PATH));
     }
 }

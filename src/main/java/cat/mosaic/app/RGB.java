@@ -3,9 +3,9 @@ package cat.mosaic.app;
 import java.io.Serializable;
 
 public class RGB implements Serializable {
-    private int R;
-    private int G;
-    private int B;
+    private final int R;
+    private final int G;
+    private final int B;
 
     public int getG() {
         return G;

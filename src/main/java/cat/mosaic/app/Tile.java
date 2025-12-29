@@ -5,8 +5,8 @@ import cat.mosaic.utils.ImageUtils;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-    private BufferedImage img;
-    private int index;
+    private final BufferedImage img;
+    private final int index;
 
     public Tile(BufferedImage img, int index) {
         this.index = index;
@@ -40,7 +40,6 @@ public class Tile {
         int meanR = (int) Math.round(sumR / (double) total);
         int meanG = (int) Math.round(sumG / (double) total);
         int meanB = (int) Math.round(sumB / (double) total);
-        int[] mean = new int[]{meanR, meanG, meanB};
-        return mean;
+        return new int[]{meanR, meanG, meanB};
     }
 }

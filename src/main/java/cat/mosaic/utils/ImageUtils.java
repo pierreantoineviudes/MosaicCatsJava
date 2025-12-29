@@ -49,7 +49,7 @@ public class ImageUtils {
 
     public static void writeImageJPG(BufferedImage bufferedImage, String outputPath) throws IOException {
         logger.info("saving to " + outputPath);
-        ImageIO.write(bufferedImage, "jpg", new File(outputPath + ".jpg"));
+        ImageIO.write(bufferedImage, "png", new File(outputPath));
     }
 
 

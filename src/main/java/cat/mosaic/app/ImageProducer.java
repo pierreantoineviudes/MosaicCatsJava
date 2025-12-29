@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import static cat.mosaic.constants.InOutConstants.N_IMAGES;
-import static cat.mosaic.constants.InOutConstants.N_THREAD_CONSUMER;
 
 
 public class ImageProducer implements Runnable {

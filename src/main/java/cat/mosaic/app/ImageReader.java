@@ -12,8 +12,8 @@ public class ImageReader implements Runnable {
     private final BlockingQueue<Tile> queue;
     private final int TileSize;
     private final BufferedImage finalImage;
-    private static Logger logger = Logger.getLogger(ImageReader.class.getName());
-    private Map<Integer, RGB> myGlobalHash;
+    private static final Logger logger = Logger.getLogger(ImageReader.class.getName());
+    private final Map<Integer, RGB> myGlobalHash;
 
     public ImageReader(BlockingQueue<Tile> queue, int TileSize, BufferedImage finalImage, Map<Integer, RGB> myGlobalHash) {
         this.queue = queue;
