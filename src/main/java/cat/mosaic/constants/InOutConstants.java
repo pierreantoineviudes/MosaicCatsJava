@@ -10,5 +10,5 @@ public class InOutConstants {
     public static final int N_IMAGES = 8000;
     public static final String hashOutputPath = "D:\\fichiers_pa\\dev\\MosaicCatsJava\\TileDict.sr";
 
-    public static final String inputImagePath = "D:\\fichiers_pa\\dev\\MosaicCatsJava\\input.jpg";
+    public static final String inputImagePath = "D:\\fichiers_pa\\dev\\MosaicCatsJava\\img.jpg";
 }
