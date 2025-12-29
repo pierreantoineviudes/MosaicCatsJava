@@ -49,6 +49,7 @@ public class ImageReader implements Runnable {
                     finalImage.getRaster().setRect(x0, y0, resized.getRaster());
                 }
             } catch (InterruptedException e) {
+                logger.severe("error" + e);
                 Thread.currentThread().interrupt();
                 break;
             }

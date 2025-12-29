@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 
 
 public class ImageUtils {
-    private static Logger logger = Logger.getLogger(ImageUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(ImageUtils.class.getName());
 
-    public static BufferedImage openImage(File file) {
+    public static BufferedImage openImage(File file) throws IOException {
         try {
             BufferedImage img = ImageIO.read(file);
 
@@ -32,7 +32,7 @@ public class ImageUtils {
 
         } catch (Exception e) {
             logger.severe("Failed to open image: " + file.getAbsolutePath());
-            return null;
+            throw e;
         }
     }
 

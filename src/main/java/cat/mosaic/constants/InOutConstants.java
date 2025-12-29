@@ -7,7 +7,7 @@ public class InOutConstants {
     public static final int TileSize = 32;
     public static final int N_THREAD_PRODUCER = 8;
     public static final int N_THREAD_CONSUMER = 8;
-    public static final int N_IMAGES = 10000;
+    public static final int N_IMAGES = 8000;
     public static final String hashOutputPath = "D:\\fichiers_pa\\dev\\MosaicCatsJava\\TileDict.sr";
 
     public static final String inputImagePath = "D:\\fichiers_pa\\dev\\MosaicCatsJava\\input.jpg";

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 import static cat.mosaic.constants.InOutConstants.N_IMAGES;
 import static cat.mosaic.constants.InOutConstants.N_THREAD_CONSUMER;
@@ -16,7 +17,7 @@ public class ImageProducer implements Runnable {
     private final List<File> files;
     private final BlockingQueue<Tile> queue;
     private final AtomicInteger counter;
-
+    private final Logger logger = Logger.getLogger(ImageProducer.class.getName());
 
 
     public ImageProducer(List<File> files, BlockingQueue<Tile> queue, AtomicInteger counter) {
@@ -30,20 +31,16 @@ public class ImageProducer implements Runnable {
     public void run() {
         for (File file : files) {
 
-            int current = counter.getAndIncrement();
-            if (current >= N_IMAGES) {
-//                le thread qui contient le poison coupe tout avant la fin d'execution des autres threads ?
-//                il est possible que le poison arrive avant les autres threads
-                break;
-            }
-
-            BufferedImage img = ImageUtils.openImage(file);
 
             try {
+                BufferedImage img = ImageUtils.openImage(file);
+                int current = counter.getAndIncrement();
+                if (current >= N_IMAGES) {
+                    break;
+                }
                 queue.put(new Tile(img, current));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+            } catch (Exception e) {
+                logger.severe("img not opened, trying not to interrupt thread, err : " + e);
             }
         }
     }
