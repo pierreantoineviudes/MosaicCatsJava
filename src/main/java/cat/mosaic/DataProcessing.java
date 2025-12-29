@@ -12,7 +12,6 @@ import cat.mosaic.utils.ImageUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -30,11 +29,11 @@ public class DataProcessing {
     private static final Logger logger = Logger.getLogger(DataProcessing.class.getName());
 
 
-    static final int numberTilesWidth = 10;
-    static final int numberTilesHeight = 10;
+    static final int numberTilesWidth = 100;
+    static final int numberTilesHeight = 100;
     static final int finalImageWidth = numberTilesWidth * TileSize;
     static final int finalImageHeight = numberTilesHeight * TileSize;
-    static Map<Integer, RGB> globalHash = new HashMap<>();
+    static Map<Integer, RGB> globalHash = new ConcurrentHashMap<>();
 
     static AtomicInteger imageCounter = new AtomicInteger(0);
 
@@ -64,6 +63,14 @@ public class DataProcessing {
 
 
         producerPool.awaitTermination(1, TimeUnit.HOURS);
+        final Tile POISON = new Tile(new BufferedImage(1, 1, 2), -1);
+        for (int i = 0; i < N_THREAD_CONSUMER; i++) {
+            try {
+                imageQueue.put(POISON);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         logger.info("Process producer termine : " + producerPool.isTerminated());
         readerPool.shutdown();
         readerPool.awaitTermination(1, TimeUnit.HOURS);

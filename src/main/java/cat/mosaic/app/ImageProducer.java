@@ -16,7 +16,7 @@ public class ImageProducer implements Runnable {
     private final List<File> files;
     private final BlockingQueue<Tile> queue;
     private final AtomicInteger counter;
-    private final Tile POISON = new Tile(new BufferedImage(1, 1, 2), -1);
+
 
 
     public ImageProducer(List<File> files, BlockingQueue<Tile> queue, AtomicInteger counter) {
@@ -32,13 +32,8 @@ public class ImageProducer implements Runnable {
 
             int current = counter.getAndIncrement();
             if (current >= N_IMAGES) {
-                for (int i = 0; i < N_THREAD_CONSUMER; i++) {
-                    try {
-                        queue.put(POISON);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+//                le thread qui contient le poison coupe tout avant la fin d'execution des autres threads ?
+//                il est possible que le poison arrive avant les autres threads
                 break;
             }
 
