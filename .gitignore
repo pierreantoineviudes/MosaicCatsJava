@@ -1,3 +1,11 @@
+# Ignore all files inside input_images and output_images
+input_images/*
+output_images/*
+
+# But keep the directories themselves
+!input_images/.gitkeep
+!output_images/.gitkeep
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
