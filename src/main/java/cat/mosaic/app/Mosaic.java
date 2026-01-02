@@ -21,6 +21,8 @@ public class Mosaic {
     private final Logger logger = Logger.getLogger(Mosaic.class.getName());
 
     public static int findNearestRGBIndex(RGB target, Map<Integer, RGB> tileDict) {
+//        TODO: would be better to invert the tileDict than performing a search ...
+//        Search for value of target, while no value furnished prendre les voisins, sinon prndre une tile aléatoire
         int nearestIndex = -1;
         double minDistanceSquared = Double.MAX_VALUE;
 

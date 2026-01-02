@@ -18,7 +18,7 @@ public class InOutConstants {
 
     public static final Path OUTPUT_DIR = BASE_DIR.resolve("output_images");
 
-    public static final Path INPUT_IMAGE_PATH = INPUT_DIR.resolve("img.png");
+    public static final Path INPUT_IMAGE_PATH = INPUT_DIR.resolve("Apex5NB.jpg");
 
     public static final Path OUTPUT_IMAGE_PATH = OUTPUT_DIR.resolve("output_mosaic.png");
 
