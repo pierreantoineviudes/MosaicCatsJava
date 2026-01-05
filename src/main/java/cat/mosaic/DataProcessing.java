@@ -29,8 +29,8 @@ public class DataProcessing {
     private static final Logger logger = Logger.getLogger(DataProcessing.class.getName());
 
 
-    static final int numberTilesWidth = 80;
-    static final int numberTilesHeight = 100;
+    public static final int numberTilesWidth = 80;
+    public static final int numberTilesHeight = 100;
     public static final int finalImageWidth = numberTilesWidth * TileSize;
     public static final int finalImageHeight = numberTilesHeight * TileSize;
     static Map<Integer, RGB> globalHash = new ConcurrentHashMap<>();

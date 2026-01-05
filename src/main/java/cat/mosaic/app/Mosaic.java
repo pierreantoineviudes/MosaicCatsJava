@@ -9,10 +9,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static cat.mosaic.DataProcessing.finalImageWidth;
+import static cat.mosaic.DataProcessing.*;
 import static cat.mosaic.constants.InOutConstants.*;
 
 public class Mosaic {
@@ -52,7 +56,7 @@ public class Mosaic {
                 (t1 - t0) / 1e6);
     }
 
-    public void main() throws IOException, ClassNotFoundException {
+    public void main() throws IOException, ClassNotFoundException, InterruptedException {
 
         long tStartTotal = System.nanoTime();
 
@@ -74,8 +78,7 @@ public class Mosaic {
 
         // Create output images
         long t4 = System.nanoTime();
-        BufferedImage resizedInputImage =
-                new BufferedImage(nTilesOutput, nTilesOutput, BufferedImage.TYPE_INT_RGB);
+        BufferedImage resizedInputImage = new BufferedImage(nTilesOutput, nTilesOutput, BufferedImage.TYPE_INT_RGB);
         BufferedImage outputImage =
                 new BufferedImage(nTilesOutput * TileSize,
                         nTilesOutput * TileSize,
@@ -96,48 +99,41 @@ public class Mosaic {
         int width = resizedInputImage.getWidth();
         int height = resizedInputImage.getHeight();
 
-        // Mosaic generation loop
-        long tLoopStart = System.nanoTime();
-        long tNearestSearch = 0;
-
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-
-                int rgb = resizedInputImage.getRGB(x, y);
-                int R = (rgb >> 16) & 0xFF;
-                int G = (rgb >> 8) & 0xFF;
-                int B = rgb & 0xFF;
-
-                long tSearchStart = System.nanoTime();
-                int index = findNearestRGBIndex(new RGB(R, G, B), myTileDict);
-                tNearestSearch += System.nanoTime() - tSearchStart;
-
-                int row = index / (finalImageWidth / TileSize);
-                int col = index % (finalImageWidth / TileSize);
-                int i = col * TileSize;
-                int j = row * TileSize;
-
-                BufferedImage tile =
-                        TilesImage.getSubimage(i, j, TileSize, TileSize);
-
-                int x0 = x * TileSize;
-                int y0 = y * TileSize;
-                outputImage.getRaster().setRect(x0, y0, tile.getRaster());
-            }
+        // Cache tile Images
+        int numTiles = numberTilesWidth * numberTilesHeight;
+        BufferedImage[] tiles = new BufferedImage[numTiles];
+        for (int idx = 0; idx < numTiles; idx++) {
+            int row = idx / numberTilesHeight;
+            int col = idx % numberTilesWidth;
+            tiles[idx] = TilesImage.getSubimage(
+                    col * TileSize,
+                    row * TileSize,
+                    TileSize,
+                    TileSize
+            );
         }
 
-        long tLoopEnd = System.nanoTime();
 
+        // Mosaic generation loop
+        LongAdder tNearestSearch = new LongAdder();
+        LongAdder tSetRect = new LongAdder();
+        long tconcurrentloopStart = System.nanoTime();
+        ExecutorService mosaicPool = Executors.newFixedThreadPool(N_THREAD_CONSUMER);
+        for (int x = 0; x < height; x++) {
+            mosaicPool.submit(new MosaicLineWriter(x, width, resizedInputImage, outputImage, myTileDict, tiles, tNearestSearch, tSetRect));
+        }
+        mosaicPool.shutdown();
+        mosaicPool.awaitTermination(5, TimeUnit.MINUTES);
+        System.out.println("Total findNearestRGBIndex time (ms): " + tNearestSearch.sum() / 1_000_000);
+        System.out.println("Total setRect time (ms): " + tSetRect.sum() / 1_000_000);
+        long tconcurrentloopEnd = System.nanoTime();
         logger.log(Level.INFO,
-                "Mosaic generation loop: {0,number,#.##} ms",
-                (tLoopEnd - tLoopStart) / 1e6);
-        logger.log(Level.INFO,
-                "  └─ Nearest RGB search only: {0,number,#.##} ms",
-                tNearestSearch / 1e6);
+                "  └─ time for concurrent loop to proceed {0,number,#.##} ms",
+                (tconcurrentloopEnd - tconcurrentloopStart) / 1e6);
 
         // Write output image
         long t8 = System.nanoTime();
-        ImageUtils.writeImageJPG(outputImage, String.valueOf(InOutConstants.OUTPUT_IMAGE_PATH));
+//        ImageUtils.writeImageJPG(outputImage, String.valueOf(InOutConstants.OUTPUT_IMAGE_PATH));
         long t9 = System.nanoTime();
         logger.log(Level.INFO,
                 "Output image written in {0,number,#.##} ms",
